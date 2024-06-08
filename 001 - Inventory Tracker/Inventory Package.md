@@ -1,5 +1,6 @@
 # Function Package For InventoryTracker.py
 ```Python
+# These functions were more for practice than actual functionality
 class Item_Name:
     def __init__(self, name):
         self.name = name

@@ -1,10 +1,11 @@
 # Inventory Tracker Program
 ```Python
 ## create classes for the name, quantity, and description of each item
-
 from InventoryPackage import Item_Name, Item_Quantity, Item_Description
 
+# Initialize the master list
 Master_List = []
+
 
 def Add_Inv_Item(lst, name, quant, desc):
     iname = Item_Name(name)
