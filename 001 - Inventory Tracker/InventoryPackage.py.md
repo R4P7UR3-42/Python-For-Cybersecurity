@@ -9,8 +9,6 @@ class Item_Quantity:
         self.quantity = quantity
 
 class Item_Description:
-
     def __init__(self, description):
-
         self.description = description
 ```
