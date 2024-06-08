@@ -1,6 +1,6 @@
 # Script to Make Web Requests and Manipulate Headers
 ```Python
-```
+# This program was used to practice sending web requests and manipulating certain headers for more a more desireable outcome
 import requests
 from requests.exceptions import *
 from gtoken import Get_Token
