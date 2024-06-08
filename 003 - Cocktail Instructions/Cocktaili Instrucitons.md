@@ -1,5 +1,8 @@
 # Cocktail Making Instructions
 ```Python
+# This was a basic program I made to practice interacting with APIs
+# Here I use a free cocktail API (www.thecocktaildb.com)
+
 import requests
 
 userquery = input('Enter a drink>> ')
