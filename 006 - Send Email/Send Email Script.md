@@ -1,6 +1,6 @@
 # Script to Send an Email
 ```Python
-# Send an email with content from the joke API (v)
+# Send an email with content from the joke API (v2.jokeapi.dev)
 # Impliment logging
 # Make sure email credentials are not in the script (external json file)
 # PROPERLY handle all exceptions specifically
