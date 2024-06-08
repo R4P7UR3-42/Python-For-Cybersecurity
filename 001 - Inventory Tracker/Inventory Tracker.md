@@ -6,7 +6,7 @@ from InventoryPackage import Item_Name, Item_Quantity, Item_Description
 # Initialize the master list
 Master_List = []
 
-
+# Function to add a list of an item and it's attributes to the master list
 def Add_Inv_Item(lst, name, quant, desc):
     iname = Item_Name(name)
     iquant = Item_Quantity(quant)
@@ -15,10 +15,12 @@ def Add_Inv_Item(lst, name, quant, desc):
     lst.append(item)
     return
 
+# Code to test the functionality
 Add_Inv_Item(Master_List, 'Laptop', 434, 'HP Laptop')
 Add_Inv_Item(Master_List, 'PC', 934, 'HP Desktop')
 Add_Inv_Item(Master_List, 'Security Camera', 775, 'Indoor/outdoor cameras')
 
+# Function to print the list in a readable format
 def print_lst(d):
     for i, d in enumerate(d):
         print(f"\033[1mItem {i+1} \033[0m")
@@ -27,6 +29,7 @@ def print_lst(d):
         print(f"Description: {d[2]}")
         print()
 
+# Function to change the quantity of an item
 def change_quantity (lst, item_to_change, new_quantity):
     for i, item in enumerate (lst):
         for d, items in enumerate (lst[i]):
