@@ -1,5 +1,7 @@
 # Inventory Tracker Program
 ```Python
+# There's a lot more that could be added to this program, but this was moreso for practice
+
 ## create classes for the name, quantity, and description of each item
 from InventoryPackage import Item_Name, Item_Quantity, Item_Description
 
@@ -39,6 +41,7 @@ def change_quantity (lst, item_to_change, new_quantity):
                 break
     return lst
 
+# Function to remove an item from the list and send a message
 def remove_item(lst, item_name):
     for i, items in enumerate (lst):
         for e, item in enumerate (lst[i]):
@@ -47,6 +50,7 @@ def remove_item(lst, item_name):
                 del lst[i]
                 return
 
+# Code to test functionality
 Master_List = change_quantity(Master_List, 'Laptop', 800)
 remove_item(Master_List, 'PC')
 print_lst(Master_List)
