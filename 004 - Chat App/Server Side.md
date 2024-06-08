@@ -14,11 +14,13 @@ s.bind((host, port))
 while True:
     # Listen
     s.listen()
+    
     # Accept connections
     client, addr = s.accept()
     pwd_challenge = 'Please enter a password'
     client.sendall(str.encode(pwd_challenge))
     pwd_attempt = client.recv(1024).decode()
+    
     if pwd_attempt == Password:
         client.sendall(str.encode('Password is correct'))
     else:
