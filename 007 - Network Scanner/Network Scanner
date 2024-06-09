@@ -4,7 +4,7 @@
 import nmap
 
 # Global Variables 
-SCANNER = nmap.PortScanner() 
+scanner = nmap.PortScanner() 
 
 # Function to gather the IP address from the user
 def validate_ip(ip):
@@ -23,9 +23,9 @@ def validate_ip(ip):
 
 def ip_addr_input():
     try:
-        IP_ADDR = input('Enter an IP address to scan ')
-        validate_ip(IP_ADDR)
-        return IP_ADDR
+        ip_addr = input('Enter an IP address to scan ')
+        validate_ip(ip_addr)
+        return ip_addr
     except ValueError as e:
         print(e)
         exit()
@@ -42,56 +42,56 @@ print("You have selected option: ", response)
  
 # 1 - SYN/ACK scan
 if response == '1':
-    IP_ADDR = ip_addr_input()
-    print("Nmap Version: ", SCANNER.nmap_version())
+    ip_addr = ip_addr_input()
+    print("Nmap Version: ", scanner.nmap_version())
     # Perform a verbose TCP SYCN/ACK scan across ports 1-1024 and 
-    SCANNER.scan(IP_ADDR,'1-1024', '-v -sS')
-    print(SCANNER.scaninfo())
+    scanner.scan(ip_addr,'1-1024', '-v -sS')
+    print(scanner.scaninfo())
     # Print the status of the IP address
-    print("Ip Status: ", SCANNER[IP_ADDR].state())
+    print("Ip Status: ", scanner[ip_addr].state())
     # Print the open protocols on the IP address
-    print("protocols:",SCANNER[IP_ADDR].all_protocols())
-    print("Open Ports: ", SCANNER[IP_ADDR]['tcp'].keys())
+    print("protocols:",scanner[ip_addr].all_protocols())
+    print("Open Ports: ", scanner[ip_addr]['tcp'].keys())
      
 # 2 - UDP Scan   
 elif response == '2':
-    IP_ADDR = ip_addr_input()
+    ip_addr = ip_addr_input()
     # Perform a verbose UDP SYN/ACK scan over ports 1-1024
-    print("Nmap Version: ", SCANNER.nmap_version())
-    SCANNER.scan(IP_ADDR, '1-1024', '-v -sU')
-    print(SCANNER.scaninfo())
+    print("Nmap Version: ", scanner.nmap_version())
+    scanner.scan(ip_addr, '1-1024', '-v -sU')
+    print(scanner.scaninfo())
     # Print the status of the IP address
-    print("Ip Status: ", SCANNER[IP_ADDR].state())
+    print("Ip Status: ", scanner[ip_addr].state())
     # Print the open protocols on the IP address
-    print("protocols:",SCANNER[IP_ADDR].all_protocols())
-    print("Open Ports: ", SCANNER[IP_ADDR]['udp'].keys())
+    print("protocols:",scanner[ip_addr].all_protocols())
+    print("Open Ports: ", scanner[ip_addr]['udp'].keys())
      
 # 3 - Comprehensive scan
 elif response == '3':
-    IP_ADDR = ip_addr_input()
-    print("Nmap Version: ", SCANNER.nmap_version())
+    ip_addr = ip_addr_input()
+    print("Nmap Version: ", scanner.nmap_version())
     # Perform an aggressive SYN scan, probe open ports and determine OS
-    SCANNER.scan(IP_ADDR, '1-1024', '-v -sS -sV -sC -A -O')
-    print(SCANNER.scaninfo())
-    print("Ip Status: ", SCANNER[IP_ADDR].state())
-    print(SCANNER[IP_ADDR].all_protocols())
-    print("Open Ports: ", SCANNER[IP_ADDR]['tcp'].keys())
+    scanner.scan(ip_addr, '1-1024', '-v -sS -sV -sC -A -O')
+    print(scanner.scaninfo())
+    print("Ip Status: ", scanner[ip_addr].state())
+    print(scanner[ip_addr].all_protocols())
+    print("Open Ports: ", scanner[ip_addr]['tcp'].keys())
      
 # 4 - Regular scan
 elif response == '4':
-    IP_ADDR = ip_addr_input()
+    ip_addr = ip_addr_input()
     # Default nmap scan
-    SCANNER.scan(IP_ADDR)
-    print(SCANNER.scaninfo())
-    print("Ip Status: ", SCANNER[IP_ADDR].state())
-    print(SCANNER[IP_ADDR].all_protocols())
-    print("Open Ports: ", SCANNER[IP_ADDR]['tcp'].keys())
+    scanner.scan(ip_addr)
+    print(scanner.scaninfo())
+    print("Ip Status: ", scanner[ip_addr].state())
+    print(scanner[ip_addr].all_protocols())
+    print("Open Ports: ", scanner[ip_addr]['tcp'].keys())
      
 # 5 - OS detection
 elif response == '5':
-    IP_ADDR = ip_addr_input()
+    ip_addr = ip_addr_input()
     # Perform a scan to detect the OS
-    print(SCANNER.scan(IP_ADDR, arguments="-O")['scan'][IP_ADDR]['osmatch'][0])
+    print(scanner.scan(ip_addr, arguments="-O")['scan'][ip_addr]['osmatch'][0])
  
 # 6 - Multiple IP inputs
 elif response == '6':
@@ -109,18 +109,18 @@ elif response == '6':
     # Perform a regular scan on the IPs
     for ip_addr in ip_addresses:
         print("Scanning: ", ip_addr)
-        SCANNER.scan(ip_addr)
-        print(SCANNER.scaninfo())
-        print("Ip Status: ", SCANNER[ip_addr].state())
-        print("protocols: ", SCANNER[ip_addr].all_protocols())
-        print("Open Ports: ", SCANNER[ip_addr]['tcp'].keys())
+        scanner.scan(ip_addr)
+        print(scanner.scaninfo())
+        print("Ip Status: ", scanner[ip_addr].state())
+        print("protocols: ", scanner[ip_addr].all_protocols())
+        print("Open Ports: ", scanner[ip_addr]['tcp'].keys())
      
 # 7 - Ping scan
 elif response == '7': 
     # Initiate a ping scan on the hosts subnet
-    SCANNER.scan(hosts='192.168.1.0/24', arguments='-n -sP -PE -PA21,23,80,3389')
+    scanner.scan(hosts='192.168.1.0/24', arguments='-n -sP -PE -PA21,23,80,3389')
     # Print all online hosts
-    hosts_list = [(x, SCANNER[x]['status']['state']) for x in SCANNER.all_hosts()]
+    hosts_list = [(x, scanner[x]['status']['state']) for x in scanner.all_hosts()]
     for host, status in hosts_list:
         print('{0}:{1}'.format(host, status))
 
