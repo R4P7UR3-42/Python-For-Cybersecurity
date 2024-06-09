@@ -1,0 +1,129 @@
+# This program uses the Python-Nmap library to complete a number of scans
+
+# Import the python-nmap library
+import nmap
+
+# Global Variables 
+SCANNER = nmap.PortScanner() 
+
+# Function to gather the IP address from the user
+def validate_ip(ip):
+    parts = ip.split('.')
+    if len(parts) != 4:
+        raise ValueError('Invalid IP address format')
+    for part in parts:
+        if not part.isdigit():
+            raise ValueError('Invalid IP address format')
+        num = int(part)
+        if num < 0 or num > 255:
+            raise ValueError('Invalid IP address format')
+        if len(part) > 1 and part[0] == '0':
+            raise ValueError('Invalid IP address format')
+    return True
+
+def ip_addr_input():
+    try:
+        IP_ADDR = input('Enter an IP address to scan ')
+        validate_ip(IP_ADDR)
+        return IP_ADDR
+    except ValueError as e:
+        print(e)
+        exit()
+
+response = input("""Please enter the type of scan you want to run
+    1)SYN ACK Scan
+    2)UDP Scan
+    3)Comprehensive Scan
+    4)Regular Scan
+    5. OS Detection
+    6. Multiple IP inputs
+    7. Ping Scan\n>> """)
+print("You have selected option: ", response)
+ 
+# 1 - SYN/ACK scan
+if response == '1':
+    IP_ADDR = ip_addr_input()
+    print("Nmap Version: ", SCANNER.nmap_version())
+    # Perform a verbose TCP SYCN/ACK scan across ports 1-1024 and 
+    SCANNER.scan(IP_ADDR,'1-1024', '-v -sS')
+    print(SCANNER.scaninfo())
+    # Print the status of the IP address
+    print("Ip Status: ", SCANNER[IP_ADDR].state())
+    # Print the open protocols on the IP address
+    print("protocols:",SCANNER[IP_ADDR].all_protocols())
+    print("Open Ports: ", SCANNER[IP_ADDR]['tcp'].keys())
+     
+# 2 - UDP Scan   
+elif response == '2':
+    IP_ADDR = ip_addr_input()
+    # Perform a verbose UDP SYN/ACK scan over ports 1-1024
+    print("Nmap Version: ", SCANNER.nmap_version())
+    SCANNER.scan(IP_ADDR, '1-1024', '-v -sU')
+    print(SCANNER.scaninfo())
+    # Print the status of the IP address
+    print("Ip Status: ", SCANNER[IP_ADDR].state())
+    # Print the open protocols on the IP address
+    print("protocols:",SCANNER[IP_ADDR].all_protocols())
+    print("Open Ports: ", SCANNER[IP_ADDR]['udp'].keys())
+     
+# 3 - Comprehensive scan
+elif response == '3':
+    IP_ADDR = ip_addr_input()
+    print("Nmap Version: ", SCANNER.nmap_version())
+    # Perform an aggressive SYN scan, probe open ports and determine OS
+    SCANNER.scan(IP_ADDR, '1-1024', '-v -sS -sV -sC -A -O')
+    print(SCANNER.scaninfo())
+    print("Ip Status: ", SCANNER[IP_ADDR].state())
+    print(SCANNER[IP_ADDR].all_protocols())
+    print("Open Ports: ", SCANNER[IP_ADDR]['tcp'].keys())
+     
+# 4 - Regular scan
+elif response == '4':
+    IP_ADDR = ip_addr_input()
+    # Default nmap scan
+    SCANNER.scan(IP_ADDR)
+    print(SCANNER.scaninfo())
+    print("Ip Status: ", SCANNER[IP_ADDR].state())
+    print(SCANNER[IP_ADDR].all_protocols())
+    print("Open Ports: ", SCANNER[IP_ADDR]['tcp'].keys())
+     
+# 5 - OS detection
+elif response == '5':
+    IP_ADDR = ip_addr_input()
+    # Perform a scan to detect the OS
+    print(SCANNER.scan(IP_ADDR, arguments="-O")['scan'][IP_ADDR]['osmatch'][0])
+ 
+# 6 - Multiple IP inputs
+elif response == '6':
+    # Create a list, add the IPs to the list once inputed and validated
+    ip_addresses = []
+    while True:
+        ip_addr = input("Enter an IP address (or 'done' to finish): ")
+        # Break out of the loop if the user says "done"
+        if ip_addr.lower() == 'done':
+            break
+        # Only add the IP if it is validated
+        if validate_ip(ip_addr):
+            ip_addresses.append(ip_addr)
+    
+    # Perform a regular scan on the IPs
+    for ip_addr in ip_addresses:
+        print("Scanning: ", ip_addr)
+        SCANNER.scan(ip_addr)
+        print(SCANNER.scaninfo())
+        print("Ip Status: ", SCANNER[ip_addr].state())
+        print("protocols: ", SCANNER[ip_addr].all_protocols())
+        print("Open Ports: ", SCANNER[ip_addr]['tcp'].keys())
+     
+# 7 - Ping scan
+elif response == '7': 
+    # Initiate a ping scan on the hosts subnet
+    SCANNER.scan(hosts='192.168.1.0/24', arguments='-n -sP -PE -PA21,23,80,3389')
+    # Print all online hosts
+    hosts_list = [(x, SCANNER[x]['status']['state']) for x in SCANNER.all_hosts()]
+    for host, status in hosts_list:
+        print('{0}:{1}'.format(host, status))
+
+# If input is incorrect, tell user to choose a correct number     
+else:
+    print("Please choose a number from the options above")
